@@ -30,7 +30,7 @@ export function BrandLogo({
     >
       <span
         className={cn(
-          "grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-white shadow-sm shadow-orange-500/25 transition-transform duration-200 group-hover:scale-105",
+          "grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-blue-500 via-violet-500 to-purple-600 text-white shadow-md shadow-blue-500/30 transition-transform duration-200 group-hover:scale-105",
           iconClassName
         )}
       >
@@ -43,7 +43,7 @@ export function BrandLogo({
         )}
       >
         Studio
-        <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-blue-500 via-violet-500 to-purple-600 bg-clip-text text-transparent">
           Space
         </span>
       </span>

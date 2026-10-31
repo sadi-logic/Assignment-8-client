@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/toast";
 import Navbar from "@/components/Navbar";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
@@ -28,9 +29,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>
-          <Navbar />
+          <Suspense fallback={<div className="h-16" aria-hidden="true" />}>
+            <Navbar />
+          </Suspense>
           {children}
-          <Toaster position="top-center" closeButton />
+          <Toaster/>
         </AuthProvider>
       </body>
     </html>

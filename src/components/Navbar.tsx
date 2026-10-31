@@ -44,9 +44,17 @@ const NAV_LINKS = [
 /** Authenticated dropdown/dashboard routes. */
 const DASHBOARD_LINKS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboardIcon },
-  { href: "/add-studio", label: "Add New Studio", icon: PlusCircleIcon },
-  { href: "/my-listings", label: "My Studio Listings", icon: Building2Icon },
-  { href: "/my-bookings", label: "My Bookings", icon: CalendarDaysIcon },
+  {
+    href: "/dashboard/add-new-studio",
+    label: "Add New Studio",
+    icon: PlusCircleIcon,
+  },
+  {
+    href: "/dashboard/my-studio-listing",
+    label: "My Studio Listings",
+    icon: Building2Icon,
+  },
+  { href: "/dashboard/my-booking", label: "My Bookings", icon: CalendarDaysIcon },
 ] as const;
 
 function isActivePath(pathname: string, href: string) {
@@ -79,7 +87,7 @@ function NavLink({
       {...props}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "relative rounded-md px-3 py-2 text-sm font-medium text-muted-foreground outline-none transition-colors after:absolute after:inset-x-3 after:bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-gradient-to-r after:from-amber-500 after:to-orange-600 after:transition-transform after:content-[''] hover:text-foreground hover:after:scale-x-100 focus-visible:ring-3 focus-visible:ring-ring/50",
+        "relative rounded-md px-3 py-2 text-sm font-medium text-muted-foreground outline-none transition-colors after:absolute after:inset-x-3 after:bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-gradient-to-r after:from-blue-500 after:to-purple-600 after:transition-transform after:content-[''] hover:text-foreground hover:after:scale-x-100 focus-visible:ring-3 focus-visible:ring-ring/50",
         isActive && "text-foreground after:scale-x-100",
         className
       )}
