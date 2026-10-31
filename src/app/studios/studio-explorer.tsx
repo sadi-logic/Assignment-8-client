@@ -105,7 +105,7 @@ function StudioCard({ studio }: { studio: Studio }) {
           )}
         </p>
         <Button
-          render={<Link href={detailsHref} />}
+          render={<Link href={`/studios/${encodeURIComponent(studio.id)}`} />}
           nativeButton={false}
           className="shrink-0 gap-2 rounded-full px-4"
         >
