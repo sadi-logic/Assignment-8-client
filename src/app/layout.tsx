@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/toast";
+import { Toaster as SonnerToaster } from "sonner";
 import Navbar from "@/components/Navbar";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
@@ -33,7 +34,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Navbar />
           </Suspense>
           {children}
-          <Toaster/>
+          <Toaster />
+          <SonnerToaster position="top-right" richColors />
         </AuthProvider>
       </body>
     </html>

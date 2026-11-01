@@ -31,6 +31,7 @@ export default function BookingForm({ studio }: { studio: Studio }) {
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [hours, setHours] = useState(minimumHours);
+  const [email, setEmail] = useState("");
   const today = localDateString(new Date());
   const total = studio.hourlyRate === null ? null : studio.hourlyRate * hours;
 
@@ -41,6 +42,7 @@ export default function BookingForm({ studio }: { studio: Studio }) {
       date,
       startTime,
       hours,
+      email,
     };
     console.log("Booking form submitted:", bookingRequest);
 
@@ -151,6 +153,20 @@ export default function BookingForm({ studio }: { studio: Studio }) {
                 </span>
               )}
             </label>
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Contact email</p>
+              <p className="text-xs text-muted-foreground">
+                We&apos;ll send booking updates and the host&apos;s confirmation to this address.
+              </p>
+              <Input
+                type="email"
+                required
+                placeholder="you@example.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="h-10 bg-background"
+              />
+            </div>
             <div className="rounded-xl bg-muted/60 p-4">
               <div className="flex items-center justify-between gap-4 text-sm">
                 <span className="text-muted-foreground">

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 export interface AuthUser {
   name: string;
@@ -11,25 +12,45 @@ export interface AuthUser {
 
 interface AuthContextValue {
   user: AuthUser | null;
-  setUser: (user: AuthUser | null) => void;
-  logout: () => void;
+  isPending: boolean;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = React.createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Phase 2 (auth): replace this state with the BetterAuth session
-  // (createAuthClient -> useSession). Everything else stays as-is.
-  const [user, setUser] = React.useState<AuthUser | null>(null);
+  const { data: session, isPending } = authClient.useSession();
+  const sessionUser = session?.user;
+  const user = React.useMemo(
+    () =>
+      sessionUser
+        ? {
+            name: sessionUser.name,
+            email: sessionUser.email,
+            image: sessionUser.image ?? undefined,
+          }
+        : null,
+    [sessionUser]
+  );
 
-  const logout = React.useCallback(() => {
-    setUser(null);
-    toast.success("Logged out successfully");
+  const logout = React.useCallback(async () => {
+    try {
+      const result = await authClient.signOut();
+      if (result.error) {
+        toast.error(result.error.message || "Unable to log out.");
+        return;
+      }
+      toast.success("Logged out successfully");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Unable to log out."
+      );
+    }
   }, []);
 
   const value = React.useMemo(
-    () => ({ user, setUser, logout }),
-    [user, logout]
+    () => ({ user, isPending, logout }),
+    [user, isPending, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

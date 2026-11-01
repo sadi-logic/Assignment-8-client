@@ -17,6 +17,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -124,14 +125,16 @@ function UserMenu({ user }: { user: AuthUser }) {
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-60">
-        <DropdownMenuLabel className="flex flex-col gap-0.5 px-2 py-1.5">
-          <span className="text-sm font-semibold text-foreground">
-            {user.name}
-          </span>
-          <span className="text-xs font-normal text-muted-foreground">
-            {user.email}
-          </span>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex flex-col gap-0.5 px-2 py-1.5">
+            <span className="text-sm font-semibold text-foreground">
+              {user.name}
+            </span>
+            <span className="text-xs font-normal text-muted-foreground">
+              {user.email}
+            </span>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         {DASHBOARD_LINKS.map(({ href, label, icon: Icon }) => (
           <DropdownMenuItem key={href} render={<Link href={href} />}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import {  useState } from "react";
 import {
     AlignLeftIcon,
     CircleDollarSignIcon,
@@ -32,6 +32,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/toast";
+import { useSession } from "@/lib/auth-client";
+import { Spinner } from "@/components/ui/spinner";
 
 const CATEGORIES = [
     "Photo Studio",
@@ -122,6 +124,13 @@ export default function AddNewStudioPage() {
     const { user } = useAuth();
     const [category, setCategory] = useState<string>("");
     const [amenities, setAmenities] = useState<string[]>([]);
+    const { data: session ,isPending } = useSession();
+
+    if (isPending){
+        <div className="flex items-center justify-center h-screen">
+            <Spinner className="h-40 w-40" />
+        </div>
+    }
 
     const toggleAmenity = (amenity: string, checked: boolean) => {
         setAmenities((prev) =>
@@ -133,6 +142,16 @@ export default function AddNewStudioPage() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (!user) {
+            toast.add({
+                title: "Sign in required",
+                description: "Please sign in before creating a studio.",
+                type: "error",
+            });
+            return;
+        }
+
         const form = e.currentTarget;
 
         const formData = new FormData(form);
@@ -145,7 +164,7 @@ export default function AddNewStudioPage() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(studios)
+            body: JSON.stringify({ ...studios, CreatorEmail: user.email })
         });
         const data = await result.json();
         console.log(data, "data");
