@@ -1,6 +1,6 @@
 "use client";
 
-import {  useState } from "react";
+import { useState } from "react";
 import {
     AlignLeftIcon,
     CircleDollarSignIcon,
@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/toast";
-import { useSession } from "@/lib/auth-client";
+import { getAuthToken } from "@/lib/auth-client";
 import { Spinner } from "@/components/ui/spinner";
 
 const CATEGORIES = [
@@ -124,13 +124,7 @@ export default function AddNewStudioPage() {
     const { user } = useAuth();
     const [category, setCategory] = useState<string>("");
     const [amenities, setAmenities] = useState<string[]>([]);
-    const { data: session ,isPending } = useSession();
-
-    if (isPending){
-        <div className="flex items-center justify-center h-screen">
-            <Spinner className="h-40 w-40" />
-        </div>
-    }
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const toggleAmenity = (amenity: string, checked: boolean) => {
         setAmenities((prev) =>
@@ -153,51 +147,111 @@ export default function AddNewStudioPage() {
         }
 
         const form = e.currentTarget;
-
         const formData = new FormData(form);
-        const studios = Object.fromEntries(formData.entries());
+        const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL?.replace(/\/$/, "");
 
-        console.log(studios, "studios");
-
-        const result = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/studios`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ ...studios, CreatorEmail: user.email })
-        });
-        const data = await result.json();
-        console.log(data, "data");
-
-        if (data.acknowledged) {
+        if (!serverUrl) {
             toast.add({
-                title: "Event created",
-                description: "Your event has been created successfully.",
-                type: "success",
-            });
-        } else {
-            toast.add({
-                title: "Error",
-                description: "There was an error creating your event.",
+                title: "Unable to create studio",
+                description: "The server URL is not configured.",
                 type: "error",
-            })
+            });
+            return;
         }
 
+        setIsSubmitting(true);
 
-        // const studioData = {
-        //     title:String(formData.get("title")).trim(),
-        //     category:String(formData.get("category")),
-        //     location:String(formData.get("location")),
-        //     hourlyRate:Number(formData.get("hourlyRate")),
-        //     securityDeposit:Number(formData.get("securityDeposit")),
-        //     maxCapacity:Number(formData.get("maxCapacity")),
-        //     imageUrl:String(formData.get("imageUrl")),
-        //     amenities,
-        //     overview:String(formData.get("overview")),
-        //     ownerName:user?.name ?? "",
-        //     ownerEmail:user?.email ?? "",
-        // };
+        try {
+            const title = String(formData.get("title") ?? "").trim();
+            const hourlyRate = Number(formData.get("hourlyRate"));
+            const maxCapacity = Number(formData.get("maxCapacity"));
 
+            if (!title || !category || !String(formData.get("location") ?? "").trim()) {
+                toast.add({
+                    title: "Complete the required fields",
+                    description: "Add a studio name, category, and location.",
+                    type: "error",
+                });
+                return;
+            }
+
+            if (!Number.isFinite(hourlyRate) || hourlyRate < 0 ||
+                !Number.isInteger(maxCapacity) || maxCapacity < 1) {
+                toast.add({
+                    title: "Check your studio details",
+                    description: "Enter a valid hourly rate and capacity of at least one.",
+                    type: "error",
+                });
+                return;
+            }
+
+            const token = await getAuthToken();
+            const studioData = {
+                title,
+                category,
+                location: String(formData.get("location") ?? "").trim(),
+                hourlyRate,
+                securityDeposit: Number(formData.get("securityDeposit") || 0),
+                rating: Number(formData.get("rating") || 0),
+                maxCapacity,
+                imageUrl: String(formData.get("imageUrl") ?? "").trim(),
+                amenities,
+                overview: String(formData.get("overview") ?? "").trim(),
+                ownerName: user.name,
+                ownerEmail: user.email,
+                CreatorEmail: user.email,
+            };
+
+            const response = await fetch(`${serverUrl}/studios`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(studioData),
+            });
+
+            const responseBody: unknown = await response.json().catch(() => null);
+            if (!response.ok) {
+                const message =
+                    typeof responseBody === "object" &&
+                        responseBody !== null &&
+                        "message" in responseBody &&
+                        typeof responseBody.message === "string"
+                        ? responseBody.message
+                        : `The server rejected the request (HTTP ${response.status}).`;
+                throw new Error(message);
+            }
+
+            if (
+                typeof responseBody !== "object" ||
+                responseBody === null ||
+                !("acknowledged" in responseBody) ||
+                responseBody.acknowledged !== true
+            ) {
+                throw new Error("The server did not confirm the studio listing.");
+            }
+
+            toast.add({
+                title: "Studio created",
+                description: "Your studio listing was created successfully.",
+                type: "success",
+            });
+            form.reset();
+            setCategory("");
+            setAmenities([]);
+        } catch (error) {
+            console.error("Unable to create studio listing.", error);
+            toast.add({
+                title: "Unable to create studio",
+                description: error instanceof Error
+                    ? error.message
+                    : "An unexpected error occurred. Please try again.",
+                type: "error",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
 
@@ -302,7 +356,7 @@ export default function AddNewStudioPage() {
                                 />
                             </div>
                         </Field>
-                    
+
 
                         <Field label="Security Deposit ($)" htmlFor="security-deposit">
                             <div className="relative">
@@ -343,7 +397,7 @@ export default function AddNewStudioPage() {
                                 </span>
                             </div>
                         </Field>
-                            <Field label="Rating (out of 5)" htmlFor="rating">
+                        <Field label="Rating (out of 5)" htmlFor="rating">
                             <Input
                                 id="rating"
                                 name="rating"
@@ -486,6 +540,7 @@ export default function AddNewStudioPage() {
                     </p>
                     <Button
                         type="submit"
+                        disabled={isSubmitting}
                         className="
   relative inline-flex min-h-11 w-full items-center justify-center
   rounded-lg px-6 py-2.5 text-center text-base font-semibold text-white
@@ -499,7 +554,14 @@ export default function AddNewStudioPage() {
   sm:w-auto sm:px-8
 "
                     >
-                        Add Studio
+                        {isSubmitting ? (
+                            <>
+                                <Spinner className="mr-2 size-4" />
+                                Creating Studio...
+                            </>
+                        ) : (
+                            "Add Studio"
+                        )}
                     </Button>
                 </div>
             </form>

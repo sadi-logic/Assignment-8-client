@@ -171,13 +171,14 @@ export async function getStudioById(id: string): Promise<Studio | null> {
   return normalizeStudio(studioData, 0);
 }
 
-export async function getStudios(): Promise<Studio[]> {
+export async function getStudios(limit?: number): Promise<Studio[]> {
   const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
   if (!serverUrl) {
     throw new Error("NEXT_PUBLIC_SERVER_URL is not configured.");
   }
 
-  const response = await fetch(`${serverUrl.replace(/\/$/, "")}/studios`, {
+  const query = limit === undefined ? "" : `?limit=${encodeURIComponent(String(limit))}`;
+  const response = await fetch(`${serverUrl.replace(/\/$/, "")}/studios${query}`, {
     cache: "no-store",
   });
 

@@ -183,20 +183,20 @@ export default function BookingForm({ studio }: { studio: Studio }) {
               </p>
             </div>
 
-             <Button type="submit" size="lg" className="h-11 w-full gap-2 rounded-xl">
+             {/* <Button type="submit" size="lg" className="h-11 w-full gap-2 rounded-xl">
                 <MailIcon className="size-4" aria-hidden="true" />
                 Send booking request
-              </Button>
-            {/* {studio.host.email ? (
+              </Button> */}
+            {studio.host.email ? (
               <Button type="submit" size="lg" className="h-11 w-full gap-2 rounded-xl">
                 <MailIcon className="size-4" aria-hidden="true" />
                 Send booking request
               </Button>
             ) : (
               <p className="rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
-                The host has not shared a booking email, so a request cannot be sent from here.
+                The user is not logged in, so a request cannot be sent from here.
               </p>
-            )} */}
+            )}
           </form>
         </DialogContent>
       </Dialog>

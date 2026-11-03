@@ -117,9 +117,17 @@ function StudioCard({ studio }: { studio: Studio }) {
   );
 }
 
-export default function StudioExplorer({ studios }: { studios: Studio[] }) {
+export default function StudioExplorer({
+  studios,
+  initialCategory,
+}: {
+  studios: Studio[];
+  initialCategory?: string;
+}) {
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All spaces");
+  const [activeCategory, setActiveCategory] = useState(
+    initialCategory ?? "All spaces"
+  );
   const [sortBy, setSortBy] = useState<SortOption>("rating");
   const categories = useMemo(
     () => ["All spaces", ...new Set(studios.map((studio) => studio.category))],
