@@ -26,9 +26,18 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en" data-theme="light"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              'try { if (localStorage.getItem("studiospace-theme") === "dark") document.documentElement.classList.add("dark"); } catch { document.documentElement.classList.remove("dark"); }',
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <AuthProvider>
           <Suspense fallback={<div className="h-16" aria-hidden="true" />}>

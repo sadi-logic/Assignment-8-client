@@ -11,6 +11,8 @@ import {
   LogOutIcon,
   MenuIcon,
   PlusCircleIcon,
+  MoonIcon,
+  SunIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -72,6 +74,21 @@ function getInitials(name: string) {
     .join("")
     .toUpperCase();
   return initials || "?";
+}
+
+function ThemeToggle({ onToggle }: { onToggle: () => void }) {
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      aria-label="Toggle light and dark mode"
+      title="Toggle light and dark mode"
+      onClick={onToggle}
+    >
+      <SunIcon className="dark:hidden" aria-hidden="true" />
+      <MoonIcon className="hidden dark:block" aria-hidden="true" />
+    </Button>
+  );
 }
 
 /**
@@ -156,6 +173,16 @@ export default function Navbar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
+  function toggleTheme() {
+    const nextIsDarkMode = !document.documentElement.classList.contains("dark");
+    document.documentElement.classList.toggle("dark", nextIsDarkMode);
+    document.documentElement.dataset.theme = nextIsDarkMode ? "dark" : "light";
+    localStorage.setItem(
+      "studiospace-theme",
+      nextIsDarkMode ? "dark" : "light"
+    );
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
@@ -182,6 +209,7 @@ export default function Navbar() {
 
         {/* Desktop auth actions */}
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle onToggle={toggleTheme} />
           {user ? (
             <UserMenu user={user} />
           ) : (
@@ -201,6 +229,7 @@ export default function Navbar() {
 
         {/* Mobile: avatar menu (when logged in) + sheet trigger */}
         <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle onToggle={toggleTheme} />
           {user && <UserMenu user={user} />}
           <Sheet>
             <SheetTrigger

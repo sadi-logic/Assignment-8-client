@@ -16,6 +16,7 @@ html {
 }
 
 :root {
+  color-scheme: light;
   --radius: 0.625rem;
   /* Cool, faintly violet-tinted neutrals instead of pure gray */
   --background: oklch(0.985 0.004 275);
@@ -53,6 +54,7 @@ html {
 }
 
 .dark {
+  color-scheme: dark;
   /* Indigo-navy near-black instead of pure black */
   --background: oklch(0.166 0.026 280);
   --foreground: oklch(0.965 0.006 280);

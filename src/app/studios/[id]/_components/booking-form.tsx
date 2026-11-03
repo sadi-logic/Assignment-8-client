@@ -79,7 +79,26 @@ export default function BookingForm({ studio }: { studio: Studio }) {
       });
 
       if (!result.ok) {
-        throw new Error(`Booking request failed (HTTP ${result.status}).`);
+        const responseBody = await result.text();
+        let message = `Booking request failed (HTTP ${result.status}).`;
+
+        if (responseBody) {
+          try {
+            const responseData: unknown = JSON.parse(responseBody);
+            if (
+              typeof responseData === "object" &&
+              responseData !== null &&
+              "message" in responseData &&
+              typeof responseData.message === "string"
+            ) {
+              message = responseData.message;
+            }
+          } catch {
+            message = responseBody;
+          }
+        }
+
+        throw new Error(message);
       }
 
       const data: unknown = await result.json();
