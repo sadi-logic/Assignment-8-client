@@ -5,6 +5,16 @@
 /* Class-based dark mode: toggle by adding `.dark` to <html> (Challenge 3 theme toggle). */
 @custom-variant dark (&:is(.dark *));
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 :root {
   --radius: 0.625rem;
   /* Cool, faintly violet-tinted neutrals instead of pure gray */

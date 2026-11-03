@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { authClient, establishServerSession } from "@/lib/auth-client";
 
 export interface AuthUser {
   name: string;
@@ -21,6 +21,7 @@ const AuthContext = React.createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data: session, isPending } = authClient.useSession();
   const sessionUser = session?.user;
+  const sessionUserId = sessionUser?.id;
   const user = React.useMemo(
     () =>
       sessionUser
@@ -32,6 +33,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         : null,
     [sessionUser]
   );
+
+  React.useEffect(() => {
+    if (!sessionUserId) return;
+
+    let active = true;
+    establishServerSession().catch((error: unknown) => {
+      if (!active) return;
+      console.error("Unable to establish the API session:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to establish the authenticated session."
+      );
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [sessionUserId]);
 
   const logout = React.useCallback(async () => {
     try {

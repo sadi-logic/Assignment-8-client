@@ -38,8 +38,8 @@ import { cn } from "@/lib/utils";
 /** Main navigation — Home is kept separate so it renders first. */
 const NAV_LINKS = [
   { href: "/studios", label: "Explore Studios" },
-  { href: "/how-it-works", label: "How It Works" },
-  { href: "/about-us", label: "About Us" },
+  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#about-us", label: "About Us" },
 ] as const;
 
 /** Authenticated dropdown/dashboard routes. */

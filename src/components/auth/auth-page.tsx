@@ -30,7 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { authClient } from "@/lib/auth-client";
+import { authClient, establishServerSession } from "@/lib/auth-client";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
@@ -178,6 +178,7 @@ export function AuthPage({ mode }: { mode: AuthMode }) {
       if (result.error) {
         throw new Error(result.error.message || "Unable to log in.");
       }
+      await establishServerSession();
       router.replace(intendedRoute);
     } catch (error) {
       const message =

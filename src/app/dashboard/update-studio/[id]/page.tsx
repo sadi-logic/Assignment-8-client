@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { establishServerSession } from "@/lib/auth-client";
 
 type StudioRecord = Record<string, unknown>;
 
@@ -141,11 +142,13 @@ export default function UpdateStudioPage() {
 
     setIsSaving(true);
     try {
+      await establishServerSession();
       const response = await fetch(
         `${serverUrl.replace(/\/$/, "")}/studios/${encodeURIComponent(id)}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify(updatedListing),
         }
       );

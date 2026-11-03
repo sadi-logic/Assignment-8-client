@@ -13,12 +13,14 @@ import {
   CompassIcon,
   CreditCardIcon,
   HeadphonesIcon,
+  LightbulbIcon,
   MapPinIcon,
   Mic2Icon,
   Music2Icon,
   PaletteIcon,
   ShieldCheckIcon,
   StarIcon,
+  UsersRoundIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -127,6 +129,29 @@ const assurances = [
     description:
       "Get help when you need it, with support for hosts and creators around the clock.",
     icon: HeadphonesIcon,
+  },
+];
+
+const aboutHighlights = [
+  {
+    title: "Discover unique spaces",
+    description: "Find inspiring studios with the details you need to choose well.",
+    icon: CompassIcon,
+  },
+  {
+    title: "Book with ease",
+    description: "Choose a space and reserve the time that works for your project.",
+    icon: CalendarDaysIcon,
+  },
+  {
+    title: "Meet your creative match",
+    description: "Bring workspace hosts and makers together in one place.",
+    icon: UsersRoundIcon,
+  },
+  {
+    title: "Make more together",
+    description: "Give collaboration and fresh ideas room to take shape.",
+    icon: LightbulbIcon,
   },
 ];
 
@@ -405,7 +430,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+      <section
+        id="how-it-works"
+        className="scroll-mt-20 mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-12"
+      >
         <SectionHeading
           eyebrow="Simple from start to finish"
           title="How Booking Works"
@@ -469,6 +497,95 @@ export default function Home() {
                     </p>
                   </CardContent>
                 </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="about-us"
+        aria-labelledby="about-us-heading"
+        className="scroll-mt-20 bg-gradient-to-b from-muted/45 to-background py-20 sm:py-24"
+      >
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+                Our story
+              </p>
+              <h2
+                id="about-us-heading"
+                className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl"
+              >
+                About StudioSpace
+              </h2>
+              <h3 className="mt-6 max-w-xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+                Space to make your next big idea happen.
+              </h3>
+              <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">
+                StudioSpace helps photographers, filmmakers, podcasters,
+                musicians, and all kinds of creators discover and book studios
+                and workspaces that fit the way they work.
+              </p>
+              <div className="mt-8 rounded-2xl border border-primary/10 bg-card/80 p-5 shadow-sm sm:p-6">
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-primary">
+                  Our mission
+                </p>
+                <p className="mt-2 leading-7 text-foreground/80">
+                  Make inspiring creative spaces accessible, convenient, and
+                  easy to book—while helping hosts connect their spaces with
+                  the people ready to create in them.
+                </p>
+              </div>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-xl lg:mx-0">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-slate-900 shadow-2xl shadow-primary/10 ring-1 ring-border/60">
+                <Image
+                  src={studioCategories[2].image}
+                  alt="A creator recording in a professionally equipped podcast studio"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  unoptimized
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                />
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent"
+                  aria-hidden="true"
+                />
+                <p className="absolute inset-x-6 bottom-6 text-lg font-medium text-white sm:text-xl">
+                  Find the room. Make the thing.
+                </p>
+              </div>
+              <div className="absolute -bottom-5 right-4 rounded-2xl border border-border/70 bg-background/95 px-5 py-3 shadow-lg backdrop-blur sm:right-8">
+                <p className="text-sm font-semibold">For every kind of creator</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  One space to start your next project
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+            {aboutHighlights.map((highlight) => {
+              const Icon = highlight.icon;
+
+              return (
+                <article
+                  key={highlight.title}
+                  className="group rounded-2xl border border-border/70 bg-card/75 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-lg hover:shadow-primary/5 sm:p-6"
+                >
+                  <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon className="size-5" aria-hidden="true" />
+                  </span>
+                  <h3 className="mt-4 font-semibold tracking-tight">
+                    {highlight.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {highlight.description}
+                  </p>
+                </article>
               );
             })}
           </div>

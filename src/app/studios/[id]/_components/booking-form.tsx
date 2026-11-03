@@ -3,6 +3,11 @@
 import { useState, type FormEvent } from "react";
 import { CalendarDaysIcon, MailIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+
+
+import { establishServerSession, useSession } from "@/lib/auth-client";
+
 import {
   Dialog,
   DialogContent,
@@ -26,6 +31,10 @@ function localDateString(date: Date) {
 }
 
 export default function BookingForm({ studio }: { studio: Studio }) {
+
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
+
   const minimumHours = studio.minimumBookingHours ?? 1;
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState("");
@@ -59,11 +68,13 @@ export default function BookingForm({ studio }: { studio: Studio }) {
     }
 
     try {
+      await establishServerSession();
       const result = await fetch(`${serverUrl.replace(/\/$/, "")}/studios/booking`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(bookingRequest),
       });
 
@@ -183,18 +194,18 @@ export default function BookingForm({ studio }: { studio: Studio }) {
               </p>
             </div>
 
-             {/* <Button type="submit" size="lg" className="h-11 w-full gap-2 rounded-xl">
+            {/* <Button type="submit" size="lg" className="h-11 w-full gap-2 rounded-xl">
                 <MailIcon className="size-4" aria-hidden="true" />
                 Send booking request
               </Button> */}
-            {studio.host.email ? (
+            {isLoggedIn ? (
               <Button type="submit" size="lg" className="h-11 w-full gap-2 rounded-xl">
                 <MailIcon className="size-4" aria-hidden="true" />
                 Send booking request
               </Button>
             ) : (
               <p className="rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
-                The user is not logged in, so a request cannot be sent from here.
+                Please log in to send a booking request.
               </p>
             )}
           </form>

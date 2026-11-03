@@ -29,10 +29,10 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { establishServerSession } from "@/lib/auth-client";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/toast";
-import { getAuthToken } from "@/lib/auth-client";
 import { Spinner } from "@/components/ui/spinner";
 
 const CATEGORIES = [
@@ -185,7 +185,6 @@ export default function AddNewStudioPage() {
                 return;
             }
 
-            const token = await getAuthToken();
             const studioData = {
                 title,
                 category,
@@ -202,12 +201,13 @@ export default function AddNewStudioPage() {
                 CreatorEmail: user.email,
             };
 
+            await establishServerSession();
             const response = await fetch(`${serverUrl}/studios`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
                 },
+                credentials: "include",
                 body: JSON.stringify(studioData),
             });
 

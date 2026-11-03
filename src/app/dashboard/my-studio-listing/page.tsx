@@ -32,7 +32,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAuthToken } from "@/lib/auth-client";
+import { establishServerSession } from "@/lib/auth-client";
 import { useAuth } from "@/lib/auth-context";
 import { normalizeStudio, type Studio } from "@/lib/studios";
 
@@ -47,15 +47,16 @@ function getListings(payload: unknown): unknown[] {
   throw new Error("The studios response has an unexpected format.");
 }
 
-async function fetchOwnedStudios(email: string, token: string): Promise<Studio[]> {
+async function fetchOwnedStudios(email: string): Promise<Studio[]> {
   const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
   if (!serverUrl) {
     throw new Error("NEXT_PUBLIC_SERVER_URL is not configured.");
   }
 
+  await establishServerSession();
   const response = await fetch(`${serverUrl.replace(/\/$/, "")}/studios`, {
     cache: "no-store",
-    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error(`Unable to load studios (HTTP ${response.status}).`);
@@ -109,8 +110,7 @@ export default function MyStudioListingPage() {
     if (!email) return;
 
     let active = true;
-    getAuthToken()
-      .then((token) => fetchOwnedStudios(email, token))
+    fetchOwnedStudios(email)
       .then((listings) => {
         if (active) {
           setStudios(listings);
@@ -152,11 +152,12 @@ export default function MyStudioListingPage() {
 
     setIsDeleting(true);
     try {
+      await establishServerSession();
       const response = await fetch(
         `${serverUrl.replace(/\/$/, "")}/studios/${encodeURIComponent(selectedStudio.id)}`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${await getAuthToken()}` },
+          credentials: "include",
         }
       );
       if (!response.ok) {

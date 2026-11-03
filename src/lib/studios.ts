@@ -64,7 +64,13 @@ export function normalizeStudio(value: unknown, index: number): Studio {
   const rawAmenities = value.amenities;
   const rating = getNumber(value.rating, value.averageRating);
   const rawHost = isRecord(value.host) ? value.host : {};
-  const hostEmail = getString(rawHost.email, value.hostEmail);
+ const hostEmail = getString(
+  rawHost.email,
+  value.hostEmail,
+  value.CreatorEmail,        
+  value.creatorEmail,        
+  value.creator?.email       
+);
   const minimumBookingHours = getNumber(value.minimumBookingHours, value.minimumDuration);
   const rawReviews = Array.isArray(value.reviews) ? value.reviews : [];
   const reviews = rawReviews.flatMap((review, reviewIndex) => {
@@ -138,7 +144,7 @@ export function normalizeStudio(value: unknown, index: number): Studio {
       verified: rawHost.verified === true || value.hostVerified === true,
       rating: getNumber(rawHost.rating, value.hostRating),
       studioCount: getNumber(rawHost.studioCount, rawHost.hostedStudios),
-      email: hostEmail && /^[^\s@?]+@[^\s@?]+\.[^\s@?]+$/.test(hostEmail) ? hostEmail : null,
+      email: hostEmail ?? null,
     },
     reviews,
   };

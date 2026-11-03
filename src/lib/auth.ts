@@ -31,7 +31,6 @@ export const auth = betterAuth({
   },
   plugins: [
     jwt({
-      sessionCookieCache: true,
       jwt: {
         issuer: `${authBaseUrl}/api/auth`,
         audience: "studiospace-server",

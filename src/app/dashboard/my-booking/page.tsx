@@ -36,8 +36,8 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { establishServerSession } from "@/lib/auth-client";
 import { useAuth } from "@/lib/auth-context";
-import { getAuthToken } from "@/lib/auth-client";
 import { getStudios, type Studio } from "@/lib/studios";
 import { cn } from "@/lib/utils";
 
@@ -196,17 +196,18 @@ function getBookingItems(payload: unknown): unknown[] {
   throw new Error("The bookings response has an unexpected format.");
 }
 
-async function fetchBookings(email: string, token: string): Promise<Booking[]> {
+async function fetchBookings(email: string): Promise<Booking[]> {
   const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
   if (!serverUrl) {
     throw new Error("NEXT_PUBLIC_SERVER_URL is not configured.");
   }
 
+  await establishServerSession();
   const response = await fetch(
     `${serverUrl.replace(/\/$/, "")}/studios/booking/${encodeURIComponent(email)}`,
     {
       cache: "no-store",
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
     }
   );
   if (!response.ok) {
@@ -310,8 +311,7 @@ export default function MyBookingsPage() {
     if (!email) return;
 
     let active = true;
-    getAuthToken()
-      .then((token) => fetchBookings(email, token))
+    fetchBookings(email)
       .then((list) => {
         if (active) {
           setBookings(list);
@@ -391,11 +391,12 @@ export default function MyBookingsPage() {
 
     setIsCancelling(true);
     try {
+      await establishServerSession();
       const response = await fetch(
         `${serverUrl.replace(/\/$/, "")}/studios/booking/${encodeURIComponent(booking.id)}`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${await getAuthToken()}` },
+          credentials: "include",
         }
       );
 
