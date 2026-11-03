@@ -69,7 +69,7 @@ export function normalizeStudio(value: unknown, index: number): Studio {
   value.hostEmail,
   value.CreatorEmail,        
   value.creatorEmail,        
-  value.creator?.email       
+  (isRecord(value.creator) ? value.creator.email : undefined)
 );
   const minimumBookingHours = getNumber(value.minimumBookingHours, value.minimumDuration);
   const rawReviews = Array.isArray(value.reviews) ? value.reviews : [];
