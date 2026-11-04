@@ -558,12 +558,6 @@ export default function Home() {
                   Find the room. Make the thing.
                 </p>
               </div>
-              <div className="absolute -bottom-5 right-4 rounded-2xl border border-border/70 bg-background/95 px-5 py-3 shadow-lg backdrop-blur sm:right-8">
-                <p className="text-sm font-semibold">For every kind of creator</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  One space to start your next project
-                </p>
-              </div>
             </div>
           </div>
 

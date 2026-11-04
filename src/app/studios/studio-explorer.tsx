@@ -169,10 +169,6 @@ export default function StudioExplorer({
         <section className="relative isolate overflow-hidden rounded-3xl border border-primary/10 bg-gradient-to-br from-primary/[0.08] via-background to-indigo-500/[0.06] px-5 py-8 sm:px-9 sm:py-11">
           <div className="pointer-events-none absolute -right-10 -top-20 -z-10 size-72 rounded-full bg-primary/10 blur-3xl" />
           <div className="max-w-3xl">
-            <Badge variant="outline" className="mb-4 gap-1.5 rounded-full bg-background/70 px-3 py-1">
-              <SparklesIcon className="size-3.5 text-primary" aria-hidden="true" />
-              Made for your next big idea
-            </Badge>
             <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">
               Explore <span className="bg-gradient-to-r from-blue-500 via-violet-500 to-purple-600 bg-clip-text text-transparent">Studios</span>
             </h1>
