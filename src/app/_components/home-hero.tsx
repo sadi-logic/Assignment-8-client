@@ -123,16 +123,7 @@ export default function HomeHero() {
                       >
                         Explore Studios
                         <ArrowRightIcon className="ml-1 size-4" aria-hidden="true" />
-                      </Button>
-                      <Button
-                        render={<Link href="/studios" />}
-                        nativeButton={false}
-                        size="lg"
-                        variant="outline"
-                        className="h-12 rounded-full border-white/35 bg-white/10 px-6 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white"
-                      >
-                        Host Your Space
-                      </Button>
+                      </Button>      
                     </div>
                   </div>
                 </div>
