@@ -108,6 +108,7 @@ export default function BookingForm({ studio }: { studio: Studio }) {
         description: "Your booking request was submitted successfully.",
         type: "success",
       });
+      setOpen(false);
     } catch (error) {
       console.error("Unable to send booking request:", error);
       toast.add({
