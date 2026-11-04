@@ -40,7 +40,6 @@ import { establishServerSession } from "@/lib/auth-client";
 import { useAuth } from "@/lib/auth-context";
 import { getStudios, type Studio } from "@/lib/studios";
 import { cn } from "@/lib/utils";
-
 const BOOKING_STATUSES = [
   "Pending",
   "Confirmed",

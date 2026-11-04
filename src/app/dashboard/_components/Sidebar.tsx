@@ -32,7 +32,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-16 flex h-[calc(100vh-4rem)] w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
+    <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar lg:flex">
       {/* Logo */}
       <div className="border-b border-sidebar-border/60 p-5">
         <BrandLogo textClassName="text-lg" />
