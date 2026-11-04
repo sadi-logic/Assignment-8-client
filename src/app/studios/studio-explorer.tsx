@@ -146,22 +146,25 @@ export default function StudioExplorer({
       return matchesQuery && matchesCategory;
     });
 
+
     return filtered.sort((a, b) => {
       if (sortBy === "price-low") {
-        if (a.hourlyRate === null) return b.hourlyRate === null ? 0 : 1;
-        if (b.hourlyRate === null) return -1;
-        return a.hourlyRate - b.hourlyRate;
+        if (a.rating === null) return b.rating === null ? 0 : 1;
+        if (b.rating === null) return -1;
+        return a.rating - b.rating;
       }
       if (sortBy === "price-high") {
-        if (a.hourlyRate === null) return b.hourlyRate === null ? 0 : 1;
-        if (b.hourlyRate === null) return -1;
-        return b.hourlyRate - a.hourlyRate;
+        if (a.rating === null) return b.rating === null ? 0 : 1;
+        if (b.rating === null) return -1;
+        return b.rating - a.rating;
       }
       if (a.rating === null) return b.rating === null ? 0 : 1;
       if (b.rating === null) return -1;
       return b.rating - a.rating;
     });
   }, [studios, search, activeCategory, sortBy]);
+
+
 
   return (
     <main className="flex-1">
